@@ -1,32 +1,33 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<html lang="en">
 <head>
-<title></title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<script language="JavaScript" src="myAJAXlib.js">
-</script>
-<SCRIPT language="JavaScript" SRC="myJS.js">
-</SCRIPT>
-
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country and Number Conversion</title>
+    <script src="myAJAXlib.js"></script>
+    <script src="myJS.js"></script>
 </head>
-<body> 
+<body>
+    <h1>Country Converter</h1>
 
-<h1><b>My simple client to a Country to Country Code Converter SOAP WS</b></h1>
-<p></p>
+    <h2>Get Country Code by Name</h2>
+    <input type="text" id="countryName" placeholder="Enter country name">
+    <button onclick="getCountryCode()">Get Country Code</button>
+    <p id="countryCodeResult"></p>
 
-<div id="div1">
-   <input type="button" id="b1" value="Convert"  onclick="convertNumber();" style="width:100">
-   <input type="text" id="t1" value="" style="width:100"> country is <input type="text" id="t2" value="" style="width:700" disabled> 
-</div>
-<div id="div2">
-   <input type="button" id="b2" value="Convert"  onclick="convertPrice();" style="width:100">
-   <input type="text" id="t3" value="" style="width:100"> code is <input type="text" id="t4" value="" style="width:716" disabled> 
-</div>
+    <h2>Get Country Name by Code</h2>
+    <input type="text" id="countryCode" placeholder="Enter country code">
+    <button onclick="getCountryName()">Get Country Name</button>
+    <p id="countryNameResult"></p>
 
+    <h2>Get Country Details</h2>
+    <input type="text" id="countryInfoCode" placeholder="Enter country code">
+    <button onclick="getCountryDetails()">Get Country Details</button>
+    <p id="countryDetailsResult"></p>
 
-<div id="div3">
-</div>
-
+    <h2>Convert Numbers to Words</h2>
+    <input type="text" id="number" placeholder="Enter a number">
+    <button onclick="convertNumberToWords()">Convert</button>
+    <p id="numberToWordsResult"></p>
 </body>
 </html>

@@ -1,71 +1,61 @@
 package servlet;
 
+import clientWS_NC.CountryConvertor;
+import clientWS_NC.NumberConvertor;
+import com.soap.ws.client.TCountryInfo;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import clientWS_NC.NumberConvertor;
-import clientWS_NC.CountryConvertor;
-
-/**
- * Servlet implementation class NC_convertor_servlet
- */
-@WebServlet("/NC_convertor_servlet")
 public class NC_convertor_servlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public NC_convertor_servlet() {
-        super();
-        // TODO Auto-generated constructor stub
+
+    private static final long serialVersionUID = 1L;
+    private CountryConvertor countryConvertor = new CountryConvertor();
+    private NumberConvertor numberConvertor = new NumberConvertor();
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String action = request.getParameter("action");
+        String value = request.getParameter("value");
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+
+        try {
+            switch (action) {
+                case "getCountryCode":
+                    String isoCode = countryConvertor.getISOCodeByCountryName(value);
+                    out.write(isoCode);
+                    break;
+                case "getCountryName":
+                    String countryName = countryConvertor.getCountryNameByISOCode(value);
+                    out.write(countryName);
+                    break;
+                case "getCountryDetails":
+                    TCountryInfo countryInfo = countryConvertor.getCountryDetails(value);
+                    String details = countryConvertor.formatCountryDetails(countryInfo);
+                    out.write(details);
+                    break;
+                case "convertNumber":
+                    String numberInWords = numberConvertor.convertNumberToWords(value);
+                    out.write(numberInWords);
+                    break;
+                default:
+                    out.write("Invalid action");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write("An error occurred while processing the request: " + e.getMessage());
+        }
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		doPost(request, response);
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//doGet(request, response);
-				//NumberConvertor client = new NumberConvertor();
-				CountryConvertor c_client = new CountryConvertor();
-				
-				String value = request.getParameter("value").toString();
-				String type = request.getParameter("type").toString();
-				PrintWriter out = response.getWriter();
-				if(value.equals("")){
-					out.write("error: Please, provide a value!");  
-				}else{
-					String result = "";
-					if(type.equals("number")) {
-						//result = client.convert2word(value);
-						result = c_client.getCountrynamebyISOCode(value);
-						System.out.print(c_client.getCountrynamebyISOCode("BB"));
-					}else{
-						//result = client.convert2dollars(value);
-						result = c_client.getISOCodeByCountryName(value);
-						System.out.print(c_client.getISOCodeByCountryName(c_client.getCountrynamebyISOCode("BB")));
-					}
-					out.write(result); 			
-				}
-							 
-				out.flush();
-			    out.close();
-	}
-
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doPost(request, response);  // Handle GET requests as POST
+    }
 }

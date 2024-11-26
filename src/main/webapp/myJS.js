@@ -1,37 +1,31 @@
-window.onload = customize;
-
-function customize(){
-	window.document.getElementById('div3').style.display = 'none';
+function getCountryCode() {
+    var countryName = document.getElementById('countryName').value;
+    makeRequest('getCountryCode', countryName, 'countryCodeResult');
 }
 
-function convertNumber()
-{
-    window.document.getElementById('div3').style.display = 'none';
-	var q_str = 'type=number&value='+document.getElementById('t1').value;
-	doAjax('NC_convertor_servlet',q_str,'convertNumber_back','post',0);
-}
-function convertNumber_back(result)
-{
-	if (result.substring(0,5)=='error'){
-	   window.document.getElementById('div3').style.display = 'block';
-	   window.document.getElementById('div3').innerHTML="<p style='color:red;'><b>"+result.substring(6)+"</b></p>";
-   }else{
-	   window.document.getElementById('t2').value=""+result;
-   }
+function getCountryName() {
+    var countryCode = document.getElementById('countryCode').value;
+    makeRequest('getCountryName', countryCode, 'countryNameResult');
 }
 
-function convertPrice()
-{
-    window.document.getElementById('div3').style.display = 'none';
-	var q_str = 'type=price&value='+document.getElementById('t3').value;
-	doAjax('NC_convertor_servlet',q_str,'convertPrice_back','post',0);
+function getCountryDetails() {
+    var countryInfoCode = document.getElementById('countryInfoCode').value;
+    makeRequest('getCountryDetails', countryInfoCode, 'countryDetailsResult');
 }
-function convertPrice_back(result)
-{
-	if (result.substring(0,5)=='error'){
-	   window.document.getElementById('div3').style.display = 'block';
-	   window.document.getElementById('div3').innerHTML="<p style='color:red;'><b>"+result.substring(6)+"</b></p>";
-   }else{
-	   window.document.getElementById('t4').value=""+result;
-   }
+
+function convertNumberToWords() {
+    var number = document.getElementById('number').value;
+    makeRequest('convertNumber', number, 'numberToWordsResult');
+}
+
+function makeRequest(action, value, resultElementId) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'NC_convertor_servlet', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            document.getElementById(resultElementId).innerHTML = xhr.responseText;
+        }
+    };
+    xhr.send('action=' + action + '&value=' + encodeURIComponent(value));
 }
